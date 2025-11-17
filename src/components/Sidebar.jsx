@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Laptop } from 'lucide-react';
+import { Users, Laptop, Search } from 'lucide-react';
 
 const Sidebar = ({ activeScreen, setActiveScreen, setAiSidebarOpen }) => {
   return (
@@ -35,6 +35,16 @@ const Sidebar = ({ activeScreen, setActiveScreen, setAiSidebarOpen }) => {
         >
           <Laptop className="w-5 h-5" />
           <span>Gestão de Aparelhos</span>
+        </button>
+
+        <button
+          onClick={() => setActiveScreen('status')}
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
+            activeScreen === 'status' ? 'bg-gray-700 text-white' : 'text-gray-400 hover:bg-gray-750'
+          }`}
+        >
+          <Search className="w-5 h-5" />
+          <span>Status dos Aparelhos</span>
         </button>
       </nav>
 

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import ClientRegistration from './components/ClientRegistration';
 import DeviceManagement from './components/DeviceManagement';
+import DeviceStatus from './components/DeviceStatus';
+import DeviceDetails from './components/DeviceDetails';
 import AISidebar from './components/AISidebar';
 
 const App = () => {
@@ -9,6 +11,7 @@ const App = () => {
   const [aiSidebarOpen, setAiSidebarOpen] = useState(false);
   const [aiMessage, setAiMessage] = useState('');
   const [aiMessages, setAiMessages] = useState([]);
+  const [selectedDeviceForDetails, setSelectedDeviceForDetails] = useState(null);
   
   const [clients, setClients] = useState([
     { 
@@ -35,7 +38,22 @@ const App = () => {
       phone: '(19) 98765-4321', 
       device: 'TV Samsung 55"', 
       defect: 'Sem imagem',
-      clientId: 'CLI-001'
+      clientId: 'CLI-001',
+      clientPhone: '(19) 98765-4321',
+      clientAddress: 'Rua das Flores, 123',
+      clientNeighborhood: 'Centro',
+      model: 'UN55J5290',
+      voltage: '110',
+      repair: '',
+      budget: '',
+      entryDate: '2025-01-15',
+      promisedDate: '2025-01-20',
+      observation: '',
+      accepted: 'não',
+      completionDate: '',
+      exitDate: '',
+      status: 'Aguardando',
+      warranty: ''
     }
   ]);
 
@@ -59,6 +77,16 @@ const App = () => {
     setDevices(prev => prev.map(device => 
       device.id === deviceId ? { ...device, downloaded: !device.downloaded } : device
     ));
+  };
+
+  const handleViewDetails = (device) => {
+    setSelectedDeviceForDetails(device);
+    setActiveScreen('deviceDetails');
+  };
+
+  const handleBackFromDetails = () => {
+    setSelectedDeviceForDetails(null);
+    setActiveScreen('status');
   };
 
   const handleSendMessage = () => {
@@ -94,6 +122,21 @@ const App = () => {
             onAddDevice={handleAddDevice}
             onToggleDownloaded={handleToggleDownloaded}
             selectedClient={selectedClientForDevice}
+          />
+        )}
+
+        {activeScreen === 'status' && (
+          <DeviceStatus
+            devices={devices}
+            clients={clients}
+            onViewDetails={handleViewDetails}
+          />
+        )}
+
+        {activeScreen === 'deviceDetails' && selectedDeviceForDetails && (
+          <DeviceDetails
+            device={selectedDeviceForDetails}
+            onBack={handleBackFromDetails}
           />
         )}
       </div>
