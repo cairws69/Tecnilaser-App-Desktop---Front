@@ -7,7 +7,7 @@ const AISidebar = ({ isOpen, onClose, messages, message, setMessage, onSendMessa
       onSendMessage();
     }
   };
-
+ 
   return (
     <div
       className={`fixed top-0 right-0 h-full bg-gray-800 border-l border-gray-700 transition-all duration-300 ease-in-out ${

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+// src/App.jsx
+import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import ClientRegistration from './components/ClientRegistration';
 import DeviceManagement from './components/DeviceManagement';
 import AISidebar from './components/AISidebar';
+import api from './services/api';
 
 const App = () => {
   const [activeScreen, setActiveScreen] = useState('clients');
@@ -10,55 +12,73 @@ const App = () => {
   const [aiMessage, setAiMessage] = useState('');
   const [aiMessages, setAiMessages] = useState([]);
   
-  const [clients, setClients] = useState([
-    { 
-      id: 'CLI-001', 
-      name: 'João Silva', 
-      phone: '(19) 98765-4321', 
-      email: 'joao@email.com', 
-      registrationDate: '2025-01-15',
-      dateOfBirth: '1990-05-15',
-      rg: '12.345.678-9',
-      postalCode: '13330-250',
-      address: 'Rua das Flores, 123',
-      neighborhood: 'Centro',
-      city: 'Indaiatuba',
-      state: 'SP'
-    }
-  ]);
-
-  const [devices, setDevices] = useState([
-    { 
-      id: 'DEV-001', 
-      downloaded: false, 
-      clientName: 'João Silva', 
-      phone: '(19) 98765-4321', 
-      device: 'TV Samsung 55"', 
-      defect: 'Sem imagem',
-      clientId: 'CLI-001'
-    }
-  ]);
-
+  const [clients, setClients] = useState([]);
+  const [devices, setDevices] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedClientForDevice, setSelectedClientForDevice] = useState(null);
+
+  // Load data on mount
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const [clientsData, devicesData] = await Promise.all([
+        api.getAllClients(),
+        api.getAllDevices()
+      ]);
+      setClients(clientsData);
+      setDevices(devicesData);
+    } catch (error) {
+      console.error('Error loading data:', error);
+      alert('Erro ao carregar dados. Verifique se o servidor está rodando.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleGenerateServiceOrder = (client) => {
     setSelectedClientForDevice(client);
     setActiveScreen('devices');
   };
 
-  const handleAddClient = (newClient) => {
-    setClients(prev => [...prev, { ...newClient, id: `CLI-${String(prev.length + 1).padStart(3, '0')}` }]);
+  const handleAddClient = async (newClient) => {
+    try {
+      const createdClient = await api.createClient(newClient);
+      setClients(prev => [...prev, createdClient]);
+      alert('Cliente cadastrado com sucesso!');
+    } catch (error) {
+      console.error('Error adding client:', error);
+      alert('Erro ao cadastrar cliente.');
+    }
   };
 
-  const handleAddDevice = (newDevice) => {
-    setDevices(prev => [...prev, { ...newDevice, id: `DEV-${String(prev.length + 1).padStart(3, '0')}` }]);
-    setSelectedClientForDevice(null);
+  const handleAddDevice = async (newDevice) => {
+    try {
+      const createdDevice = await api.createDevice(newDevice);
+      setDevices(prev => [...prev, createdDevice]);
+      setSelectedClientForDevice(null);
+      alert('Aparelho cadastrado com sucesso!');
+    } catch (error) {
+      console.error('Error adding device:', error);
+      alert('Erro ao cadastrar aparelho.');
+    }
   };
 
-  const handleToggleDownloaded = (deviceId) => {
-    setDevices(prev => prev.map(device => 
-      device.id === deviceId ? { ...device, downloaded: !device.downloaded } : device
-    ));
+  const handleToggleDownloaded = async (deviceId) => {
+    try {
+      const updatedDevice = await api.toggleDeviceDownloaded(deviceId);
+      setDevices(prev => 
+        prev.map(device => 
+          device.id === deviceId ? updatedDevice : device
+        )
+      );
+    } catch (error) {
+      console.error('Error toggling device:', error);
+      alert('Erro ao atualizar status do aparelho.');
+    }
   };
 
   const handleSendMessage = () => {
@@ -74,9 +94,24 @@ const App = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex h-screen bg-gray-900 text-gray-100 items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-xl text-gray-300">Carregando dados...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-gray-900 text-gray-100">
-      <Sidebar activeScreen={activeScreen} setActiveScreen={setActiveScreen} setAiSidebarOpen={setAiSidebarOpen} />
+      <Sidebar 
+        activeScreen={activeScreen} 
+        setActiveScreen={setActiveScreen} 
+        setAiSidebarOpen={setAiSidebarOpen} 
+      />
 
       <div className="flex-1 overflow-auto">
         {activeScreen === 'clients' && (
