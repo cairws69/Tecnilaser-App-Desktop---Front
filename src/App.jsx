@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import ClientRegistration from './components/ClientRegistration';
 import DeviceManagement from './components/DeviceManagement';
+import DeviceStatus from './components/DeviceStatus';
+import DeviceDetails from './components/DeviceDetails';
 import AISidebar from './components/AISidebar';
 import api from './services/api';
 
@@ -11,7 +13,7 @@ const App = () => {
   const [aiSidebarOpen, setAiSidebarOpen] = useState(false);
   const [aiMessage, setAiMessage] = useState('');
   const [aiMessages, setAiMessages] = useState([]);
-  
+  const [selectedDeviceForDetails, setSelectedDeviceForDetails] = useState(null);
   const [clients, setClients] = useState([]);
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -81,6 +83,16 @@ const App = () => {
     }
   };
 
+  const handleViewDetails = (device) => {
+    setSelectedDeviceForDetails(device);
+    setActiveScreen('deviceDetails');
+  };
+
+  const handleBackFromDetails = () => {
+    setSelectedDeviceForDetails(null);
+    setActiveScreen('status');
+  };
+
   const handleSendMessage = () => {
     if (aiMessage.trim()) {
       setAiMessages(prev => [...prev, { type: 'user', text: aiMessage }]);
@@ -129,6 +141,21 @@ const App = () => {
             onAddDevice={handleAddDevice}
             onToggleDownloaded={handleToggleDownloaded}
             selectedClient={selectedClientForDevice}
+          />
+        )}
+
+        {activeScreen === 'status' && (
+          <DeviceStatus
+            devices={devices}
+            clients={clients}
+            onViewDetails={handleViewDetails}
+          />
+        )}
+
+        {activeScreen === 'deviceDetails' && selectedDeviceForDetails && (
+          <DeviceDetails
+            device={selectedDeviceForDetails}
+            onBack={handleBackFromDetails}
           />
         )}
       </div>
