@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 const ClientRegistration = ({ clients, onAddClient, onGenerateServiceOrder }) => {
   const [clientForm, setClientForm] = useState({
-    id: 'Auto-gerado',
     name: '',
     email: '',
     phone: '',
@@ -22,10 +21,13 @@ const ClientRegistration = ({ clients, onAddClient, onGenerateServiceOrder }) =>
 
   const handleSaveClient = () => {
     if (clientForm.name && clientForm.email && clientForm.phone) {
-      onAddClient(clientForm);
+      // remove qualquer ID antes de enviar para a API
+      const { id, ...payload } = clientForm;
+
+      onAddClient(payload);
+
       // Reset form
       setClientForm({
-        id: 'Auto-gerado',
         name: '',
         email: '',
         phone: '',
@@ -60,11 +62,13 @@ const ClientRegistration = ({ clients, onAddClient, onGenerateServiceOrder }) =>
 
       {/* Client Form */}
       <div className="grid grid-cols-3 gap-6 mb-8">
+        
+        {/* ID aparece apenas como placeholder, nunca enviado */}
         <div>
           <label className="block text-sm text-gray-300 mb-2">ID do Cliente</label>
           <input
             type="text"
-            value={clientForm.id}
+            value="Auto-gerado"
             disabled
             className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-500"
           />
@@ -180,7 +184,7 @@ const ClientRegistration = ({ clients, onAddClient, onGenerateServiceOrder }) =>
         </div>
       </div>
 
-      {/* Registered Clients Table */}
+      {/* Tabela */}
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-2xl font-bold text-white">Clientes Cadastrados</h3>
       </div>
@@ -193,7 +197,7 @@ const ClientRegistration = ({ clients, onAddClient, onGenerateServiceOrder }) =>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Nome</th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Telefone</th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Email</th>
-              <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Data de Cadastro</th>
+              <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Data</th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Ações</th>
             </tr>
           </thead>
