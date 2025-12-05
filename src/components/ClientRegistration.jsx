@@ -189,11 +189,11 @@ const ClientRegistration = ({ clients, onAddClient, onGenerateServiceOrder }) =>
         <h3 className="text-2xl font-bold text-white">Clientes Cadastrados</h3>
       </div>
 
-      <div className="bg-gray-800 rounded-lg overflow-hidden">
+<div className="bg-gray-800 rounded-lg overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-750">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">ID</th>
+              <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">#</th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Nome</th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Telefone</th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Email</th>
@@ -204,7 +204,7 @@ const ClientRegistration = ({ clients, onAddClient, onGenerateServiceOrder }) =>
           <tbody>
             {clients.map((client, idx) => (
               <tr key={idx} className="border-t border-gray-700">
-                <td className="px-6 py-4 text-sm">{client.id}</td>
+                <td className="px-6 py-4 text-sm font-bold text-teal-400">{client.numericId || client.id}</td>
                 <td className="px-6 py-4 text-sm">{client.name}</td>
                 <td className="px-6 py-4 text-sm">{client.phone}</td>
                 <td className="px-6 py-4 text-sm">{client.email}</td>

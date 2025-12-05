@@ -1,17 +1,6 @@
-// prisma/schema.prisma
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")   // conexão para rodar a aplicação
-  directUrl = env("DIRECT_URL")     // conexão direta para migrations
-}
-
 model Client {
   id               String    @id @default(cuid())
+  numericId        Int       @unique @default(autoincrement())
   name             String
   email            String
   phone            String
@@ -32,6 +21,7 @@ model Client {
 
 model Device {
   id                 String    @id @default(cuid())
+  numericId          Int       @unique @default(autoincrement())
   clientId           String
   clientName         String
   clientAddress      String?

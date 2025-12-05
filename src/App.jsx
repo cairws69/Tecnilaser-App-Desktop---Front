@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import ClientRegistration from './components/ClientRegistration';
@@ -11,8 +10,6 @@ import api from './services/api';
 const App = () => {
   const [activeScreen, setActiveScreen] = useState('clients');
   const [aiSidebarOpen, setAiSidebarOpen] = useState(false);
-  const [aiMessage, setAiMessage] = useState('');
-  const [aiMessages, setAiMessages] = useState([]);
   const [selectedDeviceForDetails, setSelectedDeviceForDetails] = useState(null);
   const [clients, setClients] = useState([]);
   const [devices, setDevices] = useState([]);
@@ -93,19 +90,6 @@ const App = () => {
     setActiveScreen('status');
   };
 
-  const handleSendMessage = () => {
-    if (aiMessage.trim()) {
-      setAiMessages(prev => [...prev, { type: 'user', text: aiMessage }]);
-      setTimeout(() => {
-        setAiMessages(prev => [...prev, { 
-          type: 'ai', 
-          text: 'Posso ajudá-lo a validar dados ou sugerir informações. Quando o backend estiver conectado, poderei analisar seu banco de dados e identificar problemas recorrentes.' 
-        }]);
-      }, 500);
-      setAiMessage('');
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex h-screen bg-gray-900 text-gray-100 items-center justify-center">
@@ -163,10 +147,6 @@ const App = () => {
       <AISidebar
         isOpen={aiSidebarOpen}
         onClose={() => setAiSidebarOpen(false)}
-        messages={aiMessages}
-        message={aiMessage}
-        setMessage={setAiMessage}
-        onSendMessage={handleSendMessage}
       />
 
       {!aiSidebarOpen && (
