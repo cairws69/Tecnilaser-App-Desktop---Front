@@ -7,7 +7,6 @@ import DeviceStatus from './components/DeviceStatus';
 import DeviceDetails from './components/DeviceDetails';
 import AISidebar from './components/AISidebar';
 import api from './services/api';
-import { sendMessageToAI, fetchDatabaseForAI } from './services/aiService';
 
 const App = () => {
   const [activeScreen, setActiveScreen] = useState('clients');
@@ -73,8 +72,8 @@ const App = () => {
   const handleToggleDownloaded = async (deviceId) => {
     try {
       const updatedDevice = await api.toggleDeviceDownloaded(deviceId);
-      setDevices(prev =>
-        prev.map(device =>
+      setDevices(prev => 
+        prev.map(device => 
           device.id === deviceId ? updatedDevice : device
         )
       );
@@ -94,22 +93,16 @@ const App = () => {
     setActiveScreen('status');
   };
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = () => {
     if (aiMessage.trim()) {
-      const userMsg = { type: 'user', text: aiMessage };
-      setAiMessages(prev => [...prev, userMsg]);
+      setAiMessages(prev => [...prev, { type: 'user', text: aiMessage }]);
+      setTimeout(() => {
+        setAiMessages(prev => [...prev, { 
+          type: 'ai', 
+          text: 'Posso ajudá-lo a validar dados ou sugerir informações. Quando o backend estiver conectado, poderei analisar seu banco de dados e identificar problemas recorrentes.' 
+        }]);
+      }, 500);
       setAiMessage('');
-      try {
-        // Get a snapshot of the database for context
-        const dbSnapshot = await fetchDatabaseForAI();
-        const context = `Database snapshot:\n${JSON.stringify(dbSnapshot, null, 2)}`;
-        const combinedMessage = `${context}\n\nUser: ${userMsg.text}`;
-        const response = await sendMessageToAI(combinedMessage, aiMessages);
-        setAiMessages(prev => [...prev, { type: 'ai', text: response }]);
-      } catch (error) {
-        console.error(error);
-        setAiMessages(prev => [...prev, { type: 'ai', text: 'Desculpe, ocorreu um erro ao processar sua mensagem.' }]);
-      }
     }
   };
 
@@ -126,23 +119,23 @@ const App = () => {
 
   return (
     <div className="flex h-screen bg-gray-900 text-gray-100">
-      <Sidebar
-        activeScreen={activeScreen}
-        setActiveScreen={setActiveScreen}
-        setAiSidebarOpen={setAiSidebarOpen}
+      <Sidebar 
+        activeScreen={activeScreen} 
+        setActiveScreen={setActiveScreen} 
+        setAiSidebarOpen={setAiSidebarOpen} 
       />
 
       <div className="flex-1 overflow-auto">
         {activeScreen === 'clients' && (
-          <ClientRegistration
-            clients={clients}
+          <ClientRegistration 
+            clients={clients} 
             onAddClient={handleAddClient}
             onGenerateServiceOrder={handleGenerateServiceOrder}
           />
         )}
 
         {activeScreen === 'devices' && (
-          <DeviceManagement
+          <DeviceManagement 
             clients={clients}
             devices={devices}
             onAddDevice={handleAddDevice}
