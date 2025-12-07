@@ -130,7 +130,7 @@ const DeviceStatus = ({ devices, clients, onViewDetails }) => {
         <table className="w-full">
           <thead className="bg-gray-750">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">ID</th>
+              <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">#</th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Cliente</th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Aparelho</th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Modelo</th>
@@ -150,7 +150,7 @@ const DeviceStatus = ({ devices, clients, onViewDetails }) => {
             ) : (
               filteredDevices.map((device, idx) => (
                 <tr key={idx} className="border-t border-gray-700 hover:bg-gray-750 transition-colors">
-                  <td className="px-6 py-4 text-sm font-medium text-teal-400">{device.id}</td>
+                  <td className="px-6 py-4 text-sm font-bold text-teal-400">{device.numericId || device.id}</td>
                   <td className="px-6 py-4 text-sm">{device.clientName}</td>
                   <td className="px-6 py-4 text-sm">{device.device}</td>
                   <td className="px-6 py-4 text-sm">{device.model || '-'}</td>

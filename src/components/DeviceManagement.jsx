@@ -59,7 +59,9 @@ const DeviceManagement = ({ clients, devices, onAddDevice, onToggleDownloaded, s
 
   const handleSaveDevice = () => {
     if (deviceForm.clientId && deviceForm.device && deviceForm.defect) {
-      onAddDevice(deviceForm);
+      // Remove o campo 'id' antes de enviar para o banco
+      const { id, ...deviceData } = deviceForm;
+      onAddDevice(deviceData);
       // Reset form
       setDeviceForm({
         id: 'Auto-gerado',

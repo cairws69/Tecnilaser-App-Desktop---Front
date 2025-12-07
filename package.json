@@ -8,18 +8,21 @@
     "build": "vite build",
     "preview": "vite preview",
     "electron:dev": "concurrently -k \"npm run dev\" \"npm run electron\"",
-    "electron": "wait-on tcp:5173 && electron ."
+    "electron": "wait-on tcp:5173 && electron .",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "prisma:studio": "prisma studio",
+    "postinstall": "prisma generate"
   },
   "main": "electron/main.js",
   "dependencies": {
-    "lucide-react": "^0.548.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "typeorm": "^0.3.20",
-    "reflect-metadata": "^0.2.1",
-    "sqlite3": "^5.1.7",
+    "@prisma/client": "^5.22.0",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "lucide-react": "^0.548.0",
+    "postgres": "^3.4.7",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
@@ -29,11 +32,13 @@
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.2.1",
     "electron": "^39.0.0",
+    "electron-icon-builder": "^2.0.1",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
     "postcss": "^8.5.6",
+    "prisma": "^5.22.0",
     "tailwindcss": "^3.4.18",
     "vite": "^7.1.7",
     "wait-on": "^9.0.1"

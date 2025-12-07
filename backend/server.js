@@ -17,7 +17,7 @@ app.use('/api', routes);
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Server is running' });
+  res.json({ status: 'ok', message: 'Server is running', database: 'Supabase PostgreSQL' });
 });
 
 // Error handling middleware
@@ -32,13 +32,14 @@ app.use((err, req, res, next) => {
 // Start server
 export const startServer = async () => {
   try {
-    // Inicializa o banco de dados
+    // Inicializa o banco de dados Prisma/Supabase
     await initializeDatabase();
     
     // Inicia o servidor
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
       console.log(`📊 API available at http://localhost:${PORT}/api`);
+      console.log(`🗄️  Database: Supabase PostgreSQL`);
     });
     
     return app;

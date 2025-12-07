@@ -30,7 +30,7 @@ async function createWindow() {
   if (process.env.NODE_ENV !== 'production') {
     mainWindow.loadURL('http://localhost:5173');
     // Descomentar para abrir DevTools automaticamente (pode gerar avisos no console)
-    // mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
   } else {
     // Para produção (após build do Vite)
     mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));

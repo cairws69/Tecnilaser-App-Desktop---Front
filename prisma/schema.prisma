@@ -1,0 +1,50 @@
+model Client {
+  id               String    @id @default(cuid())
+  numericId        Int       @unique @default(autoincrement())
+  name             String
+  email            String
+  phone            String
+  dateOfBirth      String?
+  rg               String?
+  postalCode       String?
+  address          String?
+  neighborhood     String?
+  city             String?
+  state            String?
+  registrationDate String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  devices          Device[]
+
+  @@map("clients")
+}
+
+model Device {
+  id                 String    @id @default(cuid())
+  numericId          Int       @unique @default(autoincrement())
+  clientId           String
+  clientName         String
+  clientAddress      String?
+  clientNeighborhood String?
+  clientPhone        String
+  device             String
+  model              String?
+  defect             String
+  voltage            String    @default("110")
+  repair             String?
+  budget             String?
+  entryDate          String
+  promisedDate       String?
+  observation        String?
+  accepted           String    @default("não")
+  completionDate     String?
+  exitDate           String?
+  status             String    @default("Aguardando")
+  warranty           String?
+  downloaded         Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  client             Client    @relation(fields: [clientId], references: [id])
+
+  @@map("devices")
+}
